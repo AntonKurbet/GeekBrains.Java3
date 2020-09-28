@@ -19,6 +19,7 @@ public class Common {
     public static final String USER_LIST = "/user_list";
     public static final String TYPE_BCAST_CLIENT = "/client_msg";
     public static final String TYPE_CLIENT_PRIVATE = "/private";
+    public static final String TYPE_CHANGE_NICK = "/change_nick";
 
     public static String getAuthRequest(String login, String password) {
         return AUTH_REQUEST + DELIMITER + login + DELIMITER + password;
@@ -52,6 +53,10 @@ public class Common {
     public static String getTypeClientPrivate(String sender, String recipient, String msg) {
         return TYPE_CLIENT_PRIVATE + DELIMITER + sender +
                 DELIMITER + recipient + DELIMITER + msg;
+    }
+
+    public static String getChangeNick(String login, String nick) {
+        return TYPE_CHANGE_NICK + DELIMITER + login + DELIMITER + nick;
     }
 
 }
