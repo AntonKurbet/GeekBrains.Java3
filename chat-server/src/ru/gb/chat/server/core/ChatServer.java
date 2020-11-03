@@ -8,6 +8,7 @@ import ru.gb.chat.network.SocketThreadListener;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
@@ -155,6 +156,18 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
                 sendToAllAuthorizedClients(
                         Common.getTypeBroadcast(client.getNickname(), arr[1]));
                 break;
+            case Common.TYPE_CHANGE_NICK:
+                try {
+                    SqlClient.setNewNickname(arr[1], arr[2]);
+                    sendToAllAuthorizedClients(Common.getTypeBroadcast(client.getNickname(),
+                            String.format("change nickname to %s",arr[2])));
+                    client.setNickname(arr[2]);
+                    sendToClient(client, Common.getChangeNick(arr[1], arr[2]));
+                    sendToAllAuthorizedClients(Common.getUserList(getUsers()));
+                } catch (SQLException e) {
+                    putLog(e.getMessage());
+                }
+                break;
             default:
                 client.msgFormatError(msg);
         }
@@ -166,6 +179,11 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
             if (!client.isAuthorized()) continue;
             client.sendMessage(msg);
         }
+    }
+
+    private void sendToClient(ClientThread client, String msg) {
+        if (!client.isAuthorized()) return;
+        client.sendMessage(msg);
     }
 
     @Override

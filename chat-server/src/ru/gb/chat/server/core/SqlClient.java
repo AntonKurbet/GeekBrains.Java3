@@ -26,6 +26,7 @@ public class SqlClient {
     }
 
     synchronized static String getNickname(String login, String password) {
+        if (login == null || password == null) throw new RuntimeException("Bad credentials");
         String query = String.format("select nickname from users where login='%s' and password='%s'", login, password);
         try (ResultSet set = statement.executeQuery(query)) {
             if (set.next())
@@ -37,4 +38,18 @@ public class SqlClient {
     }
 
 
+    synchronized static void setNewNickname(String login, String newNick) throws SQLException {
+        String query = String.format("update users set nickname='%s' where login='%s'", newNick, login);
+        try (Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
+            try {
+                statement.execute(query);
+                connection.commit();
+            } catch (SQLException e)  {
+                connection.rollback();
+                throw new RuntimeException("Cannnot change nick");
+            }
+            connection.setAutoCommit(true);
+        }
+    }
 }
