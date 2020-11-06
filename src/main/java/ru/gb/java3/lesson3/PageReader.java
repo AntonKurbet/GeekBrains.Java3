@@ -25,25 +25,16 @@ public class PageReader {
         }
     }
 
-    static void gotoPage(int pageNum) {
+    static void readPage(int pageNum) {
         try {
             book.seek((pageNum - 1) * PAGE_SIZE);
-        } catch (IOException e) {
-            System.out.printf("No %d page\n",pageNum);
-        }
-    }
-
-    static void readPage() {
-        try {
             book.readFully(buffer);
-        } catch (IOException e) {
-            System.out.println("Read error");
-        }
-    }
 
-    static void printBuffer() {
-        String str = new String(buffer);
-        System.out.println(str);
+            String str = new String(buffer);
+            System.out.println(str);
+        } catch (IOException e) {
+            System.out.printf("No %d page or read file error\n",pageNum );
+        }
     }
 
     static void startTimer() { timer = System.currentTimeMillis();}
@@ -67,9 +58,7 @@ public class PageReader {
             page = scanner.nextInt();
             if (page > 0) {
                 startTimer();
-                gotoPage(page);
-                readPage();
-                printBuffer();
+                readPage(page);
                 System.out.printf("%d msec\n", stopTimer());
             }
         } while (page > 0);

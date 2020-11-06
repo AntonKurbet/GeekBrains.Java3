@@ -39,19 +39,6 @@ public class IOTest {
         return result.toString().getBytes();
     }
 
-    public static void main(String[] args) {
-        writeRandomFile("randoms.txt",80);
-        byte[] fromFile = readFileBytes("randoms.txt");
-        System.out.println(Arrays.toString(fromFile));
-
-        String[] files = new String[5];
-        for (int i = 0; i < 5; i++) {
-            files[i] = String.format("file%d.txt",i);
-            writeRandomFile(files[i],100);
-        }
-        mergeFiles(files,"result.txt");
-    }
-
     private static void mergeFiles(String[] files, String filename) {
         ArrayList<InputStream> streams = new ArrayList<>();
 
@@ -74,5 +61,18 @@ public class IOTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        writeRandomFile("randoms.txt",80);
+        byte[] fromFile = readFileBytes("randoms.txt");
+        System.out.println(Arrays.toString(fromFile));
+
+        String[] files = new String[5];
+        for (int i = 0; i < 5; i++) {
+            files[i] = String.format("file%d.txt",i);
+            writeRandomFile(files[i],100);
+        }
+        mergeFiles(files,"result.txt");
     }
 }
